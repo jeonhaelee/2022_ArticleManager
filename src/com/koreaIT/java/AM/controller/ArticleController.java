@@ -7,16 +7,41 @@ import java.util.Scanner;
 import com.koreaIT.java.AM.dto.Article;
 import com.koreaIT.java.AM.util.Util;
 
-public class ArticleController {
+public class ArticleController extends Controller {
 	private Scanner sc;
 	private List<Article> articles;
-
-	public ArticleController(Scanner sc, List<Article> articles) {
+	private String command;
+	private String actionMethodName;
+	
+	public ArticleController(Scanner sc) {
 		this.sc = sc;
-		this.articles = articles;
+		articles = new ArrayList<Article>();
 	}
-
-	public void doWrite() {
+	
+	public void doAction(String command, String actionMethodName) {
+		this.command = command;
+		this.actionMethodName = actionMethodName;
+		
+		switch (actionMethodName) {
+		case "write":
+			doWrite();
+			break;
+		case "list":
+			showList();
+			break;
+		case "detail":
+			showDetail();
+			break;
+		case "modify":
+			doModify();
+			break;
+		case "delete":
+			doDelete();
+			break;
+		}
+	}
+	
+	private void doWrite() {
 
 		int id = articles.size() + 1;
 		String regDate = Util.getNowDateTimeStr();
@@ -32,7 +57,7 @@ public class ArticleController {
 
 	}
 
-	public void showList(String command) {
+	private void showList() {
 
 		if (articles.size() == 0) {
 			System.out.println("게시물이 없습니다.");
@@ -65,7 +90,7 @@ public class ArticleController {
 		}
 	}
 
-	public void showDetail(String command) {
+	private void showDetail() {
 
 		String[] commandBits = command.split(" ");
 		int id = Integer.parseInt(commandBits[2]); // "1" -> 1
@@ -87,7 +112,7 @@ public class ArticleController {
 
 	}
 
-	public void doModify(String command) {
+	private void doModify() {
 
 		String[] commandBits = command.split(" ");
 		int id = Integer.parseInt(commandBits[2]); // "1" -> 1
@@ -111,7 +136,7 @@ public class ArticleController {
 
 	}
 
-	public void doDelete(String command) {
+	private void doDelete() {
 
 		String[] commandBits = command.split(" ");
 		int id = Integer.parseInt(commandBits[2]); // "1" -> 1
@@ -159,5 +184,13 @@ public class ArticleController {
 		}
 		return null;
 	}
+	
+	public void makeTestData() {
+		System.out.println("테스트를 위한 데이터를 생성합니다");
 
+		articles.add(new Article(1, Util.getNowDateTimeStr(), "제목1", "내용1", 11));
+		articles.add(new Article(2, Util.getNowDateTimeStr(), "제목2", "내용2", 22));
+		articles.add(new Article(3, Util.getNowDateTimeStr(), "제목3", "내용3", 33));
+	}
+	
 }
